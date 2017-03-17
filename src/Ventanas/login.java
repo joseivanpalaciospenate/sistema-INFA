@@ -6,8 +6,16 @@
 
 
 package Ventanas;
+
+import DB.coneccion;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ivan
@@ -17,6 +25,43 @@ public class login extends javax.swing.JFrame {
     /**
      * Creates new form login
      */
+    static Connection cnn=null;
+  static Statement sta=null;
+  static ResultSet rst=null;
+  
+    void validar(){
+         String usuario=txt_usuario.getText();
+        String pass=String.valueOf(txtpass_contraseña.getPassword());
+        String sql="select * from usuarios where User='"+usuario+"' and Password='"+pass+"' ";
+       cnn=coneccion.enlace(cnn);
+        sta=coneccion.declaracion(sta);
+         try {
+         
+          rst=sta.executeQuery(sql);
+        
+        if(usuario.equalsIgnoreCase("")|| pass.equalsIgnoreCase("")){
+            JOptionPane.showMessageDialog(null,"Faltan Ingresar Datos");
+            
+        }else{
+           
+                if(rst.next()){
+                    Menu_Principal Menu=new Menu_Principal();
+                    Menu.setVisible(true);
+                    this.dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Datos Incorrectos");
+                    txt_usuario.setText("");
+                    txtpass_contraseña.setText("");
+                    txt_usuario.requestFocus();
+                }
+            }
+         }
+        
+            catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null,"Estas cometiendo un error");
+            }
+
+    }
     public login() {
         initComponents();
         //kitamos la opciones de maximizar y cerrar
@@ -41,8 +86,8 @@ public class login extends javax.swing.JFrame {
         jlb_logo = new javax.swing.JLabel();
         jlb_user = new javax.swing.JLabel();
         jlb_pass = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        txt_usuario = new javax.swing.JTextField();
+        txtpass_contraseña = new javax.swing.JPasswordField();
         btn_iniciar = new javax.swing.JButton();
         jbl_fondo = new javax.swing.JLabel();
 
@@ -51,9 +96,8 @@ public class login extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btn_salir.setBackground(new java.awt.Color(0, 0, 153));
+        btn_salir.setBackground(new java.awt.Color(204, 0, 0));
         btn_salir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btn_salir.setForeground(new java.awt.Color(255, 255, 255));
         btn_salir.setText("Salir");
         btn_salir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -75,20 +119,20 @@ public class login extends javax.swing.JFrame {
         jlb_pass.setText("Password:");
         getContentPane().add(jlb_pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 380, -1, -1));
 
-        jTextField1.setBackground(new java.awt.Color(0, 0, 153));
-        jTextField1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 320, 160, 30));
+        txt_usuario.setBackground(new java.awt.Color(0, 0, 153));
+        txt_usuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txt_usuario.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(txt_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 320, 160, 30));
 
-        jPasswordField1.setBackground(new java.awt.Color(0, 0, 153));
-        jPasswordField1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jPasswordField1.setForeground(new java.awt.Color(255, 255, 255));
-        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
+        txtpass_contraseña.setBackground(new java.awt.Color(0, 0, 153));
+        txtpass_contraseña.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtpass_contraseña.setForeground(new java.awt.Color(255, 255, 255));
+        txtpass_contraseña.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField1ActionPerformed(evt);
+                txtpass_contraseñaActionPerformed(evt);
             }
         });
-        getContentPane().add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 380, 160, 30));
+        getContentPane().add(txtpass_contraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 380, 160, 30));
 
         btn_iniciar.setBackground(new java.awt.Color(0, 0, 153));
         btn_iniciar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -112,12 +156,13 @@ public class login extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_btn_salirActionPerformed
 
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
+    private void txtpass_contraseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpass_contraseñaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
+    }//GEN-LAST:event_txtpass_contraseñaActionPerformed
 
     private void btn_iniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_iniciarActionPerformed
         // TODO add your handling code here:
+         validar();
     }//GEN-LAST:event_btn_iniciarActionPerformed
 
     /**
@@ -158,11 +203,11 @@ public class login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_iniciar;
     private javax.swing.JButton btn_salir;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel jbl_fondo;
     private javax.swing.JLabel jlb_logo;
     private javax.swing.JLabel jlb_pass;
     private javax.swing.JLabel jlb_user;
+    public static javax.swing.JTextField txt_usuario;
+    public static javax.swing.JPasswordField txtpass_contraseña;
     // End of variables declaration//GEN-END:variables
 }
